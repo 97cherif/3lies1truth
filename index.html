@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ary">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 dyal kdbat o 7a9i9a w7da — by 97 cherif</title>
+<meta name="description" content="Game 1v1: kteb 3 dyal kdbat o 7a9i9a w7da, o 3raf achmen wa7da hiya l7a9i9a dyal sa7bek.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👁</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#040a0f; --panel:#08161d; --field:#02080b;
+  --teal:#6fe3d2; --teal-dim:#2c6f6a; --text:#cdeee8; --soft:#6f9a97;
+  --red:#ff3b5c; --blue:#3bd5ff;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  font-size:15px; color:var(--text); line-height:1.5;
+  background:
+    radial-gradient(ellipse at 50% 0%,#0d2a33 0%,transparent 60%),
+    radial-gradient(ellipse at 50% 100%,#0a1f2e 0%,transparent 55%),
+    var(--bg);
+  background-attachment:fixed;
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  overflow-x:hidden;
+}
+/* CRT layers */
+body::before{
+  content:"";position:fixed;inset:0;z-index:50;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.28) 3px);
+  animation:flicker 5s infinite steps(1);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:49;pointer-events:none;opacity:.10;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .4  0 0 0 0 .9  0 0 0 0 .85  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+@keyframes flicker{0%,100%{opacity:1}92%{opacity:.82}93%{opacity:1}97%{opacity:.9}98%{opacity:1}}
+#app{max-width:640px;margin:0 auto;padding:22px 16px 90px;position:relative;z-index:1}
+
+h1{
+  font-family:"VT323",monospace;font-weight:400;color:var(--teal);
+  font-size:clamp(3rem,13vw,5rem);line-height:.88;letter-spacing:.01em;
+  text-shadow:-2px 0 rgba(255,59,92,.55),2px 0 rgba(59,213,255,.55),0 0 18px rgba(111,227,210,.35);
+  animation:glitch 6s infinite;
+}
+@keyframes glitch{
+  0%,90%,100%{transform:none;text-shadow:-2px 0 rgba(255,59,92,.55),2px 0 rgba(59,213,255,.55),0 0 18px rgba(111,227,210,.35)}
+  91%{transform:translateX(-4px) skewX(-6deg);text-shadow:-6px 0 rgba(255,59,92,.8),6px 0 rgba(59,213,255,.8)}
+  93%{transform:translateX(5px) skewX(5deg);text-shadow:5px 0 rgba(255,59,92,.8),-5px 0 rgba(59,213,255,.8)}
+  95%{transform:none}
+}
+/* Title: the lies are crossed out, the truth is highlighted */
+h1.title{text-shadow:none;animation:glitch2 7s infinite;display:flex;flex-direction:column;align-items:flex-start;gap:.1em}
+@keyframes glitch2{0%,90%,100%{transform:none}91%{transform:translateX(-4px) skewX(-6deg)}93%{transform:translateX(5px) skewX(5deg)}95%{transform:none}}
+h1.title .lies{
+  color:#ff6a82;text-shadow:0 0 16px rgba(255,59,92,.45);
+  text-decoration:line-through;text-decoration-color:#ff3b5c;text-decoration-thickness:.07em;
+}
+h1.title .lies b{font-weight:400;color:#ffb3bf}
+h1.title .truth{
+  color:#031114;background:var(--teal);padding:.02em .14em .0;text-shadow:none;
+  box-shadow:0 0 28px rgba(111,227,210,.5),-3px 0 0 rgba(59,213,255,.6),3px 0 0 rgba(255,59,92,.35);
+}
+h1.title .truth::after{content:"_";margin-left:.04em;animation:cursor 1s steps(1) infinite}
+@keyframes cursor{50%{opacity:0}}
+.trace path{stroke:url(#tg)}
+h2{font-family:"VT323",monospace;font-weight:400;font-size:2rem;line-height:1;color:var(--teal);margin-bottom:6px;text-shadow:0 0 10px rgba(111,227,210,.3)}
+p.sub{color:var(--soft);margin-bottom:16px}
+.quote{color:var(--soft);font-size:.85rem;margin:14px 0 20px}
+
+.hero{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.hero .t{flex:1 1 260px}
+.lain{
+  position:relative;width:132px;height:132px;flex:none;border:1px solid var(--teal-dim);
+  background:url("lain.png") center/cover;image-rendering:pixelated;
+  box-shadow:0 0 22px rgba(111,227,210,.25);overflow:hidden;
+}
+.lain::before,.lain::after{
+  content:"";position:absolute;inset:0;background:url("lain.png") center/cover;image-rendering:pixelated;mix-blend-mode:screen;opacity:0;
+}
+.lain::before{filter:hue-rotate(150deg) saturate(3);animation:slice1 5s infinite}
+.lain::after{filter:hue-rotate(-80deg) saturate(3);animation:slice2 5s infinite}
+@keyframes slice1{0%,88%,100%{opacity:0}89%{opacity:.8;transform:translateX(-6px);clip-path:inset(20% 0 55% 0)}92%{opacity:.8;transform:translateX(5px);clip-path:inset(60% 0 12% 0)}95%{opacity:0}}
+@keyframes slice2{0%,90%,100%{opacity:0}91%{opacity:.8;transform:translateX(6px);clip-path:inset(40% 0 35% 0)}94%{opacity:.8;transform:translateX(-5px);clip-path:inset(8% 0 75% 0)}96%{opacity:0}}
+.lain.sm{width:84px;height:84px}
+
+.trace{display:block;width:100%;height:46px;margin:6px 0 12px}
+.trace path{fill:none;stroke:var(--teal);stroke-width:2;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 2.6s steps(60) forwards;filter:drop-shadow(0 0 4px var(--teal))}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* old OS window */
+.win{border:1px solid var(--teal-dim);background:var(--panel);margin-bottom:18px;box-shadow:0 0 0 1px #000,0 0 24px rgba(111,227,210,.08)}
+.tb{
+  display:flex;justify-content:space-between;align-items:center;padding:2px 8px;
+  background:linear-gradient(90deg,#1d6b66,#12363f);color:#eafffb;font-family:"VT323",monospace;font-size:1.2rem;letter-spacing:.03em
+}
+.tb .x{border:1px solid #9be9de;padding:0 6px;line-height:1.1;font-size:1rem}
+.bd{padding:16px}
+
+label.f{display:block;color:var(--soft);margin:0 0 6px}
+input[type=text]{
+  width:100%;font:inherit;font-size:1rem;padding:11px 12px;color:var(--teal);caret-color:var(--teal);
+  background:var(--field);border:1px solid var(--teal-dim);border-radius:0
+}
+input[type=text]::placeholder{color:#3d6360}
+input[type=text]:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.btn{
+  font-family:"VT323",monospace;font-size:1.5rem;line-height:1;cursor:pointer;width:100%;
+  padding:10px 16px;color:var(--teal);background:transparent;border:1px solid var(--teal);border-radius:0;
+  box-shadow:0 0 12px rgba(111,227,210,.25),inset 0 0 12px rgba(111,227,210,.08);
+  transition:background .1s,color .1s
+}
+.btn:hover:not(:disabled){background:var(--teal);color:#021012}
+.btn:active:not(:disabled){transform:translate(1px,1px)}
+.btn.alt{color:var(--soft);border-color:var(--teal-dim);box-shadow:none}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.row>.btn{flex:0 0 38%}
+.gap{height:12px}
+.or{text-align:center;color:var(--soft);margin:14px 0}
+.code{font-family:"VT323",monospace;font-size:5rem;line-height:1;letter-spacing:.25em;text-align:center;color:var(--teal);text-shadow:-2px 0 rgba(255,59,92,.5),2px 0 rgba(59,213,255,.5),0 0 20px rgba(111,227,210,.5);padding:6px 0 0 .25em}
+.hint{color:var(--soft);text-align:center}
+.err{color:var(--red);margin-top:10px;min-height:1.3em}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.chip{font-family:"VT323",monospace;font-size:1.3rem;border:1px solid var(--teal-dim);padding:0 10px;color:var(--text);background:var(--panel)}
+.timer{font-family:"VT323",monospace;font-size:2rem;line-height:1;padding:2px 12px;border:1px solid var(--teal);color:var(--teal);font-variant-numeric:tabular-nums;background:var(--panel)}
+.timer.low{color:#fff;background:var(--red);border-color:var(--red);animation:pulse .5s infinite alternate}
+@keyframes pulse{to{box-shadow:0 0 18px var(--red)}}
+
+.stmt{margin-bottom:16px}
+.stmt .tag{display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;user-select:none;width:max-content;color:var(--soft)}
+.stmt .tag input{accent-color:var(--teal);width:17px;height:17px}
+.stmt.is-truth input[type=text]{border-color:var(--teal);box-shadow:0 0 14px rgba(111,227,210,.3)}
+.stmt.is-truth .tag{color:var(--teal)}
+
+.pick{
+  display:block;width:100%;text-align:left;font:inherit;font-size:1rem;cursor:pointer;color:var(--text);
+  background:var(--panel);border:1px solid var(--teal-dim);border-radius:0;padding:13px 14px;margin-bottom:10px;transition:background .1s,border-color .1s
+}
+.pick:hover:not(:disabled){border-color:var(--teal);background:#0c2530}
+.pick.sel{background:var(--teal);color:#021012;border-color:var(--teal);box-shadow:0 0 16px rgba(111,227,210,.5)}
+.pick:disabled{cursor:default}
+.pick.truth{border-color:var(--teal);color:var(--teal);background:rgba(111,227,210,.1);box-shadow:0 0 14px rgba(111,227,210,.25)}
+.pick.lie{color:#6b8583;text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px}
+.pick .badge{float:right;margin-left:10px;font-family:"VT323",monospace;font-size:1.2rem;line-height:1.1;color:var(--red);text-decoration:none;display:inline-block}
+.pick.truth .badge{color:var(--teal)}
+
+.score{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.score .box{border:1px solid var(--teal-dim);background:var(--panel);padding:10px;text-align:center}
+.score .box.win{border-color:var(--teal);box-shadow:0 0 18px rgba(111,227,210,.35)}
+.score .big{font-family:"VT323",monospace;font-size:4rem;line-height:.9;color:var(--teal)}
+.score .nm{word-break:break-word;color:var(--soft)}
+.verdict{font-family:"VT323",monospace;font-size:2.6rem;line-height:.95;color:var(--teal);margin-bottom:14px;text-shadow:-2px 0 rgba(255,59,92,.5),2px 0 rgba(59,213,255,.5)}
+.mark.ok{color:var(--teal)} .mark.no{color:var(--red)}
+
+.waiting{text-align:center;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.dots span{font-family:"VT323",monospace;font-size:2.4rem;line-height:.5;display:inline-block;animation:blink 1.2s infinite;color:var(--teal)}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.15}40%{opacity:1}}
+
+footer{position:fixed;left:0;right:0;bottom:0;z-index:51;text-align:center;padding:10px;color:var(--soft);background:linear-gradient(transparent,var(--bg) 60%);pointer-events:none;font-size:.9rem}
+footer b{color:var(--teal);font-weight:600}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .trace path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<footer>by <b>97 cherif</b></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- config ---------- */
+var WRITE_SECONDS = 90;   // w9t dyal l ktaba
+var GUESS_SECONDS = 30;   // w9t dyal l ikhtiyar
+var PREFIX = "3dk7w-cherif97-";
+
+/* ---------- helpers ---------- */
+var app = document.getElementById("app");
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function genCode(){var c="ABCDEFGHJKLMNPQRSTUVWXYZ",s="";for(var i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function win(title,inner){return '<section class="win"><div class="tb"><span>'+title+'</span><span class="x">x</span></div><div class="bd">'+inner+'</div></section>';}
+function lainImg(sm){return '<div class="lain'+(sm?' sm':'')+'" role="img" aria-label="Lain"></div>';}
+function layer(n){return "Layer "+("0"+n).slice(-2);}
+var TRACE='<svg class="trace" viewBox="0 0 600 46" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="tg" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#ff3b5c"/><stop offset=".45" stop-color="#ff3b5c"/><stop offset=".7" stop-color="#6fe3d2"/><stop offset="1" stop-color="#6fe3d2"/></linearGradient></defs><path d="M0 24 H60 L72 24 L80 6 L92 42 L104 12 L112 24 H190 L200 24 L210 16 L220 32 L230 24 H300 L310 24 L318 3 L332 43 L346 8 L356 24 H430 L440 21 L450 28 L460 24 H520 L530 24 L538 10 L548 38 L558 18 L566 24 H600"/></svg>';
+
+/* ---------- state ---------- */
+var peer=null, conn=null, isHost=false, roomCode="";
+function freshRound(){
+  return {
+    mine:null, myTruth:-1,      // jomali (mkhelta) o index dyal l7a9i9a, ma kayt3tach 7ta l reveal
+    oppList:null, oppTruth:-1,
+    submitted:false,
+    myGuess:null,
+    oppGuessed:false, oppCorrect:false,
+    gotResult:false, myCorrect:false,
+    againMe:false, againOpp:false
+  };
+}
+var G={ name:"", oppName:"Sa7bi", my:0, opp:0, round:1, r:freshRound(), phase:"home" };
+var timerId=null;
+
+function stopTimer(){ if(timerId){clearInterval(timerId);timerId=null;} }
+function startTimer(sec,onTick,onEnd){
+  stopTimer();
+  var end=Date.now()+sec*1000;
+  function tick(){
+    var left=Math.max(0,Math.ceil((end-Date.now())/1000));
+    onTick(left);
+    if(left<=0){stopTimer();onEnd();}
+  }
+  tick(); timerId=setInterval(tick,250);
+}
+function fmt(s){return Math.floor(s/60)+":"+("0"+(s%60)).slice(-2);}
+function send(m){ try{ if(conn&&conn.open) conn.send(m);}catch(e){} }
+
+/* ---------- screens ---------- */
+function home(msg){
+  stopTimer(); G.phase="home";
+  app.innerHTML =
+    '<div class="hero"><div class="t"><h1 class="title"><span class="lies"><b>3</b> dyal kdbat</span><span class="truth">o 7a9i9a w7da</span></h1></div>'+lainImg()+'</div>'+TRACE+
+    '<p class="quote">Present day... present time.</p>'+
+    win("wired://3dyal-kdbat.exe",
+      '<p class="sub">Kteb 3 dyal kdbat o 7a9i9a w7da. Sa7bek ydir b7alk. 3raf achmen wa7da hiya l7a9i9a 9bel ma ytsali l w9t.</p>'+
+      '<label class="f" for="name">Smitek</label>'+
+      '<input id="name" type="text" maxlength="16" placeholder="mataln: Cherif" autocomplete="off" value="'+esc(G.name)+'">'+
+      '<div class="gap"></div>'+
+      '<button class="btn" id="create">Dir room jdida</button>'+
+      '<div class="or">ola dkhel 3nd sa7bek</div>'+
+      '<div class="row">'+
+        '<input id="code" type="text" maxlength="4" placeholder="Code" aria-label="Code dyal room" autocomplete="off" style="text-transform:uppercase;letter-spacing:.25em;text-align:center">'+
+        '<button class="btn alt" id="join">Dkhel</button>'+
+      '</div>'+
+      '<div class="err" id="err" role="alert">'+esc(msg||"")+'</div>');
+  var nameEl=document.getElementById("name");
+  function getName(){var n=nameEl.value.trim();if(!n){document.getElementById("err").textContent="Kteb smitek lowel.";nameEl.focus();return null;}G.name=n;return n;}
+  document.getElementById("create").onclick=function(){ if(getName()) hostRoom(); };
+  document.getElementById("join").onclick=function(){
+    if(!getName())return;
+    var c=document.getElementById("code").value.trim().toUpperCase();
+    if(c.length!==4){document.getElementById("err").textContent="Code kaybda b 4 d l7rouf.";return;}
+    joinRoom(c);
+  };
+}
+
+function waitingRoom(){
+  G.phase="lobby";
+  app.innerHTML=
+    '<h1>Room<br>m7loula</h1>'+TRACE+
+    win("room.exe",
+      '<p class="hint">3ti had code l sa7bek</p>'+
+      '<div class="code" id="rc">'+esc(roomCode)+'</div>'+
+      '<div class="gap"></div><button class="btn alt" id="copy">Nsekh code</button>')+
+    '<div class="waiting">'+lainImg(true)+'<div class="dots"><span>.</span><span>.</span><span>.</span></div><p class="hint">Kantsnaw sa7bek ydkhel</p></div>';
+  document.getElementById("copy").onclick=function(){
+    var b=this; try{navigator.clipboard.writeText(roomCode);b.textContent="Tnsakh";}catch(e){b.textContent="Code: "+roomCode;}
+  };
+}
+
+function connecting(txt){
+  app.innerHTML='<h1>Tsna<br>chwiya</h1>'+TRACE+'<div class="waiting">'+lainImg(true)+'<div class="dots"><span>.</span><span>.</span><span>.</span></div><p class="hint">'+esc(txt)+'</p></div>';
+}
+
+function scoreChip(){ return '<span class="chip">'+esc(G.name)+' '+G.my+' : '+G.opp+' '+esc(G.oppName)+'</span>'; }
+
+function writeScreen(){
+  G.phase="write";
+  var html='<div class="top">'+scoreChip()+'<span class="timer" id="tm">'+fmt(WRITE_SECONDS)+'</span></div>'+
+    '<h2>'+layer(G.round)+': kteb 4 dyal jomal</h2>'+
+    '<p class="sub">3 menhom kdbat. Khtar liha li hiya l7a9i9a. Khliha t3ti l7ass bli kdba.</p><div id="form">';
+  for(var i=0;i<4;i++){
+    html+='<div class="stmt'+(i===0?' is-truth':'')+'" data-i="'+i+'">'+
+      '<input type="text" maxlength="110" placeholder="Jomla '+(i+1)+'" aria-label="Jomla '+(i+1)+'" autocomplete="off">'+
+      '<label class="tag"><input type="radio" name="truth" value="'+i+'"'+(i===0?' checked':'')+'> <span>'+(i===0?'Hadi hiya l7a9i9a':'Dirha hiya l7a9i9a')+'</span></label></div>';
+  }
+  html+='</div><button class="btn" id="submit">Sed l jomal dyali</button><div class="err" id="err" role="alert"></div>';
+  app.innerHTML=html;
+
+  var stmts=[].slice.call(document.querySelectorAll(".stmt"));
+  function refresh(){
+    var t=+document.querySelector('input[name=truth]:checked').value;
+    stmts.forEach(function(el,i){
+      el.classList.toggle("is-truth",i===t);
+      el.querySelector(".tag span").textContent=i===t?"Hadi hiya l7a9i9a":"Dirha hiya l7a9i9a";
+    });
+  }
+  [].slice.call(document.querySelectorAll('input[name=truth]')).forEach(function(r){r.onchange=refresh;});
+
+  function collect(force){
+    var texts=stmts.map(function(el){return el.querySelector('input[type=text]').value.trim();});
+    var t=+document.querySelector('input[name=truth]:checked').value;
+    if(force){ texts=texts.map(function(x){return x||"(salat l w9t)";}); }
+    else if(texts.some(function(x){return !x;})){ document.getElementById("err").textContent="3mer l 4 dyal jomal."; return null; }
+    return {texts:texts,truth:t};
+  }
+  function lock(force){
+    if(G.r.submitted) return;
+    var d=collect(force); if(!d) return;
+    var order=shuffle([0,1,2,3]);
+    G.r.mine=order.map(function(k){return d.texts[k];});
+    G.r.myTruth=order.indexOf(d.truth);
+    G.r.submitted=true;
+    stopTimer();
+    send({type:"statements",list:G.r.mine});
+    waitOpponentWrite();
+    maybeGuess();
+  }
+  document.getElementById("submit").onclick=function(){lock(false);};
+  startTimer(WRITE_SECONDS,function(s){
+    var el=document.getElementById("tm"); if(!el)return;
+    el.textContent=fmt(s); el.classList.toggle("low",s<=10);
+  },function(){ lock(true); });
+}
+
+function waitOpponentWrite(){
+  if(G.r.oppList) return;
+  app.innerHTML='<div class="top">'+scoreChip()+'</div><div class="waiting">'+lainImg(true)+'<h2>Tsedd</h2><div class="dots"><span>.</span><span>.</span><span>.</span></div><p class="hint">Kantsnaw '+esc(G.oppName)+' ykamel l ktaba</p></div>';
+}
+
+function maybeGuess(){
+  if(G.phase==="write" && G.r.submitted && G.r.oppList){ guessScreen(); }
+}
+
+function guessScreen(){
+  G.phase="guess";
+  var sel=-1, locked=false;
+  var html='<div class="top">'+scoreChip()+'<span class="timer" id="tm">'+fmt(GUESS_SECONDS)+'</span></div>'+
+    '<h2>Achmen wa7da hiya l7a9i9a?</h2><p class="sub">'+esc(G.oppName)+' ktab had l jomal. Ghir wa7da menhom s7i7a.</p><div id="opts">';
+  G.r.oppList.forEach(function(t,i){ html+='<button class="pick" data-i="'+i+'">'+esc(t)+'</button>'; });
+  html+='</div><button class="btn" id="go" disabled>Sed jawabi</button>';
+  app.innerHTML=html;
+  var picks=[].slice.call(document.querySelectorAll(".pick")), go=document.getElementById("go");
+  picks.forEach(function(b){ b.onclick=function(){ if(locked)return; sel=+b.dataset.i; picks.forEach(function(x){x.classList.toggle("sel",x===b);}); go.disabled=false; }; });
+  function lockGuess(){
+    if(locked)return; locked=true; stopTimer();
+    G.r.myGuess=sel;
+    picks.forEach(function(x){x.disabled=true;}); go.disabled=true; go.textContent="Kantsnaw n natija...";
+    send({type:"guess",idx:sel});
+  }
+  go.onclick=lockGuess;
+  startTimer(GUESS_SECONDS,function(s){
+    var el=document.getElementById("tm"); if(!el)return;
+    el.textContent=fmt(s); el.classList.toggle("low",s<=8);
+  },lockGuess);
+}
+
+function maybeResult(){
+  if(G.phase==="guess" && G.r.myGuess!==null && G.r.gotResult && G.r.oppGuessed){ resultScreen(); }
+}
+
+function resultScreen(){
+  G.phase="result"; stopTimer();
+  if(G.r.myCorrect) G.my++;
+  if(G.r.oppCorrect) G.opp++;
+  var r=G.r;
+  var v = r.myCorrect&&!r.oppCorrect ? "Rbe7ti had layer" : (!r.myCorrect&&r.oppCorrect ? esc(G.oppName)+" rbe7 had layer" : (r.myCorrect ? "Tnayn 3rfo l7a9i9a" : "7ta wa7ed ma 3raf"));
+  var html='<div class="verdict">'+v+'</div>'+
+    '<div class="score"><div class="box'+(G.my>G.opp?' win':'')+'"><div class="big">'+G.my+'</div><div class="nm">'+esc(G.name)+'</div></div>'+
+    '<div class="box'+(G.opp>G.my?' win':'')+'"><div class="big">'+G.opp+'</div><div class="nm">'+esc(G.oppName)+'</div></div></div>';
+
+  html+='<h2>Jomal dyal '+esc(G.oppName)+'</h2><p class="sub">nta '+(r.myCorrect?'<span class="mark ok">lqiti l7a9i9a</span>':'<span class="mark no">ma lqitihach</span>')+'</p>';
+  r.oppList.forEach(function(t,i){
+    var cls=i===r.oppTruth?"truth":"lie", b="";
+    if(i===r.oppTruth) b='<span class="badge">7A9I9A</span>'; else if(i===r.myGuess) b='<span class="badge">khtiyarek</span>';
+    html+='<button class="pick '+cls+'" disabled>'+b+esc(t)+'</button>';
+  });
+  html+='<h2 style="margin-top:20px">Jomal dyalk</h2><p class="sub">'+esc(G.oppName)+' '+(r.oppCorrect?'<span class="mark no">lqa l7a9i9a dyalk</span>':'<span class="mark ok">waq3 f kdba</span>')+'</p>';
+  r.mine.forEach(function(t,i){
+    var cls=i===r.myTruth?"truth":"lie", b=i===r.myTruth?'<span class="badge">7A9I9A</span>':"";
+    html+='<button class="pick '+cls+'" disabled>'+b+esc(t)+'</button>';
+  });
+  html+='<div class="gap"></div><button class="btn" id="again">Layer jdid</button><div class="gap"></div><button class="btn alt" id="leave">Khrej men room</button>';
+  app.innerHTML=html;
+  var ag=document.getElementById("again");
+  ag.onclick=function(){ G.r.againMe=true; ag.disabled=true; ag.textContent="Kantsnaw "+G.oppName+"..."; send({type:"again"}); maybeAgain(); };
+  document.getElementById("leave").onclick=function(){ teardown(); home(); };
+}
+
+function maybeAgain(){
+  if(G.r.againMe && G.r.againOpp){ G.round++; G.r=freshRound(); writeScreen(); }
+}
+
+/* ---------- networking ---------- */
+function teardown(){
+  stopTimer();
+  try{ if(conn) conn.close(); }catch(e){}
+  try{ if(peer) peer.destroy(); }catch(e){}
+  conn=null; peer=null; G.my=0; G.opp=0; G.round=1; G.r=freshRound(); G.oppName="Sa7bi";
+}
+
+function hostRoom(){
+  teardown(); isHost=true; roomCode=genCode();
+  connecting("Kandir room jdida");
+  peer=new Peer(PREFIX+roomCode);
+  peer.on("open",function(){ waitingRoom(); });
+  peer.on("error",function(e){
+    if(e.type==="unavailable-id"){ hostRoom(); return; }
+    home("Ma9drnach ndiro room ("+e.type+"). 3awed jereb.");
+  });
+  peer.on("connection",function(c){
+    if(conn){ c.on("open",function(){c.close();}); return; }  // room 3amra
+    setupConn(c);
+  });
+}
+
+function joinRoom(code){
+  teardown(); isHost=false; roomCode=code;
+  connecting("Kandkhlo l room "+code);
+  peer=new Peer();
+  peer.on("open",function(){
+    var c=peer.connect(PREFIX+code,{reliable:true});
+    var t=setTimeout(function(){ if(!conn||!conn.open){ teardown(); home("Ma9drnach nwslo l room "+code+". Tzayen mn code o 3awed."); } },12000);
+    c.on("open",function(){clearTimeout(t);});
+    setupConn(c);
+  });
+  peer.on("error",function(e){
+    if(e.type==="peer-unavailable") home("Room "+code+" ma kaynach. Tzayen mn code.");
+    else home("Mochkil f connexion ("+e.type+"). 3awed jereb.");
+  });
+}
+
+function setupConn(c){
+  conn=c;
+  c.on("open",function(){ send({type:"hello",name:G.name}); });
+  c.on("data",onMsg);
+  c.on("close",function(){
+    if(G.phase==="home") return;
+    stopTimer();
+    var n=G.oppName;
+    teardown();
+    home(n+" khrej men l game.");
+  });
+}
+
+function onMsg(m){
+  if(!m||!m.type) return;
+  switch(m.type){
+    case "hello":
+      G.oppName=String(m.name||"Sa7bi").slice(0,16);
+      if(isHost){ send({type:"start"}); G.r=freshRound(); writeScreen(); }
+      break;
+    case "start":
+      G.r=freshRound(); writeScreen(); break;
+    case "statements":
+      if(Array.isArray(m.list)&&m.list.length===4){
+        G.r.oppList=m.list.map(function(x){return String(x).slice(0,110);});
+        if(G.phase==="write"&&G.r.submitted) maybeGuess();
+      }
+      break;
+    case "guess":
+      // kan9arno jawab sa7bi m3a l7a9i9a dyali, 3ad kan3tiwh reveal
+      G.r.oppCorrect=(m.idx===G.r.myTruth);
+      G.r.oppGuessed=true;
+      send({type:"result",correct:G.r.oppCorrect,truthIdx:G.r.myTruth});
+      maybeResult();
+      break;
+    case "result":
+      G.r.myCorrect=!!m.correct; G.r.oppTruth=m.truthIdx; G.r.gotResult=true;
+      maybeResult();
+      break;
+    case "again":
+      G.r.againOpp=true; maybeAgain(); break;
+  }
+}
+
+home();
+})();
+</script>
+</body>
+</html>
