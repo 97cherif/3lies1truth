@@ -134,10 +134,12 @@ input[type=text]:focus-visible,button:focus-visible{outline:2px solid var(--blue
 @keyframes pulse{to{box-shadow:0 0 18px var(--red)}}
 
 .stmt{margin-bottom:16px}
-.stmt .tag{display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;user-select:none;width:max-content;color:var(--soft)}
-.stmt .tag input{accent-color:var(--teal);width:17px;height:17px}
+.stmt .lbl{display:block;margin:0 0 5px;font-family:"VT323",monospace;font-size:1.3rem;line-height:1}
+.stmt.is-truth .lbl{color:var(--teal)}
+.stmt.is-lie .lbl{color:#ff6a82}
 .stmt.is-truth input[type=text]{border-color:var(--teal);box-shadow:0 0 14px rgba(111,227,210,.3)}
-.stmt.is-truth .tag{color:var(--teal)}
+.stmt.is-lie input[type=text]{border-color:#6b2a37;color:#ffb3bf}
+.stmt.is-lie input[type=text]::placeholder{color:#7a4a54}
 
 .pick{
   display:block;width:100%;text-align:left;font:inherit;font-size:1rem;cursor:pointer;color:var(--text);
@@ -164,6 +166,34 @@ input[type=text]:focus-visible,button:focus-visible{outline:2px solid var(--blue
 .dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.15}40%{opacity:1}}
 
+/* chat */
+#chat[hidden],#chatWin[hidden],#chatBadge[hidden]{display:none}
+button.x{background:transparent;color:inherit;font:inherit;cursor:pointer}
+#chatBtn{
+  position:fixed;right:14px;bottom:46px;z-index:60;cursor:pointer;
+  font-family:"VT323",monospace;font-size:1.5rem;line-height:1;padding:8px 14px;
+  color:var(--teal);background:var(--panel);border:1px solid var(--teal);border-radius:0;
+  box-shadow:0 0 14px rgba(111,227,210,.3)
+}
+#chatBtn:hover{background:var(--teal);color:#021012}
+#chatBadge{display:inline-block;margin-left:6px;padding:0 6px;background:var(--red);color:#fff;font-size:1.1rem}
+#chatWin{
+  position:fixed;right:14px;bottom:92px;z-index:60;width:min(340px,calc(100vw - 28px));margin:0;
+  box-shadow:0 0 0 1px #000,0 0 30px rgba(0,0,0,.7),0 0 24px rgba(111,227,210,.15)
+}
+#chatWin .bd{padding:10px}
+#chatLog{height:230px;overflow-y:auto;margin-bottom:10px;padding-right:4px;font-size:.92rem}
+#chatLog .empty{color:var(--soft)}
+#chatLog .msg{margin:0 0 6px;word-break:break-word}
+#chatLog .msg b{color:var(--teal);font-weight:600}
+#chatLog .msg.me b{color:var(--blue)}
+#chatRow{display:flex;gap:8px}
+#chatRow input{flex:1;min-width:0}
+#chatRow button{
+  font-family:"VT323",monospace;font-size:1.3rem;line-height:1;cursor:pointer;padding:0 14px;
+  color:var(--teal);background:transparent;border:1px solid var(--teal);border-radius:0
+}
+#chatRow button:hover{background:var(--teal);color:#021012}
 footer{position:fixed;left:0;right:0;bottom:0;z-index:51;text-align:center;padding:10px;color:var(--soft);background:linear-gradient(transparent,var(--bg) 60%);pointer-events:none;font-size:.9rem}
 footer b{color:var(--teal);font-weight:600}
 @media (prefers-reduced-motion:reduce){
@@ -175,6 +205,20 @@ footer b{color:var(--teal);font-weight:600}
 <body>
 <div id="app"></div>
 <footer>by <b>97 cherif</b></footer>
+
+<div id="chat" hidden>
+  <button id="chatBtn" type="button">chat<span id="chatBadge" hidden>0</span></button>
+  <section id="chatWin" class="win" hidden aria-label="Chat">
+    <div class="tb"><span>chat.exe</span><button class="x" id="chatX" type="button" aria-label="Sed chat">x</button></div>
+    <div class="bd">
+      <div id="chatLog" aria-live="polite"></div>
+      <div id="chatRow">
+        <input id="chatIn" type="text" maxlength="200" placeholder="Kteb chi 7aja..." autocomplete="off" aria-label="Message">
+        <button id="chatSend" type="button">Sift</button>
+      </div>
+    </div>
+  </section>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
@@ -228,7 +272,7 @@ function send(m){ try{ if(conn&&conn.open) conn.send(m);}catch(e){} }
 
 /* ---------- screens ---------- */
 function home(msg){
-  stopTimer(); G.phase="home";
+  stopTimer(); G.phase="home"; chatShow(false);
   app.innerHTML =
     '<div class="hero"><div class="t"><h1 class="title"><span class="lies"><b>3</b> dyal kdbat</span><span class="truth">o 7a9i9a w7da</span></h1></div>'+lainImg()+'</div>'+TRACE+
     '<p class="quote">Present day... present time.</p>'+
@@ -279,28 +323,21 @@ function writeScreen(){
   G.phase="write";
   var html='<div class="top">'+scoreChip()+'<span class="timer" id="tm">'+fmt(WRITE_SECONDS)+'</span></div>'+
     '<h2>'+layer(G.round)+': kteb 4 dyal jomal</h2>'+
-    '<p class="sub">3 menhom kdbat. Khtar liha li hiya l7a9i9a. Khliha t3ti l7ass bli kdba.</p><div id="form">';
+    '<p class="sub">L jomla lowla hiya l7a9i9a, o 3 lakhrin kdbat. Mnin ytl3o l sa7bek ghaykono mkhltin random.</p><div id="form">';
   for(var i=0;i<4;i++){
-    html+='<div class="stmt'+(i===0?' is-truth':'')+'" data-i="'+i+'">'+
-      '<input type="text" maxlength="110" placeholder="Jomla '+(i+1)+'" aria-label="Jomla '+(i+1)+'" autocomplete="off">'+
-      '<label class="tag"><input type="radio" name="truth" value="'+i+'"'+(i===0?' checked':'')+'> <span>'+(i===0?'Hadi hiya l7a9i9a':'Dirha hiya l7a9i9a')+'</span></label></div>';
+    var lbl=i===0?'L7a9i9a':'Kdba '+i;
+    html+='<div class="stmt '+(i===0?'is-truth':'is-lie')+'" data-i="'+i+'">'+
+      '<label class="lbl" for="s'+i+'">'+lbl+'</label>'+
+      '<input id="s'+i+'" type="text" maxlength="110" placeholder="'+(i===0?'Kteb jomla s7i7a 3lik':'Kteb jomla kadba')+'" autocomplete="off"></div>';
   }
   html+='</div><button class="btn" id="submit">Sed l jomal dyali</button><div class="err" id="err" role="alert"></div>';
   app.innerHTML=html;
 
   var stmts=[].slice.call(document.querySelectorAll(".stmt"));
-  function refresh(){
-    var t=+document.querySelector('input[name=truth]:checked').value;
-    stmts.forEach(function(el,i){
-      el.classList.toggle("is-truth",i===t);
-      el.querySelector(".tag span").textContent=i===t?"Hadi hiya l7a9i9a":"Dirha hiya l7a9i9a";
-    });
-  }
-  [].slice.call(document.querySelectorAll('input[name=truth]')).forEach(function(r){r.onchange=refresh;});
 
   function collect(force){
     var texts=stmts.map(function(el){return el.querySelector('input[type=text]').value.trim();});
-    var t=+document.querySelector('input[name=truth]:checked').value;
+    var t=0; // l input lowl dima howa l7a9i9a
     if(force){ texts=texts.map(function(x){return x||"(salat l w9t)";}); }
     else if(texts.some(function(x){return !x;})){ document.getElementById("err").textContent="3mer l 4 dyal jomal."; return null; }
     return {texts:texts,truth:t};
@@ -392,8 +429,42 @@ function maybeAgain(){
   if(G.r.againMe && G.r.againOpp){ G.round++; G.r=freshRound(); writeScreen(); }
 }
 
+/* ---------- chat (direct browser to browser, nothing is stored) ---------- */
+var chatState={open:false,unread:0};
+var chatEl=document.getElementById("chat"), chatWin=document.getElementById("chatWin"),
+    chatLog=document.getElementById("chatLog"), chatIn=document.getElementById("chatIn"),
+    chatBadge=document.getElementById("chatBadge");
+function chatBadgeUpdate(){ chatBadge.textContent=chatState.unread; chatBadge.hidden=chatState.unread===0; }
+function chatOpen(v){
+  chatState.open=v; chatWin.hidden=!v;
+  if(v){ chatState.unread=0; chatBadgeUpdate(); chatLog.scrollTop=chatLog.scrollHeight; chatIn.focus(); }
+}
+function chatShow(v){ chatEl.hidden=!v; if(!v) chatOpen(false); }
+function chatClear(){ chatLog.innerHTML='<p class="empty">Ma kayn 7ta message l7ad daba.</p>'; chatState.unread=0; chatBadgeUpdate(); }
+function chatAdd(who,name,text){
+  var empty=chatLog.querySelector(".empty"); if(empty) empty.remove();
+  var d=document.createElement("p"); d.className="msg"+(who==="me"?" me":"");
+  var b=document.createElement("b"); b.textContent=name+": ";
+  d.appendChild(b); d.appendChild(document.createTextNode(text));
+  chatLog.appendChild(d); chatLog.scrollTop=chatLog.scrollHeight;
+  if(who==="opp" && !chatState.open){ chatState.unread++; chatBadgeUpdate(); }
+}
+function chatSendMsg(){
+  var t=chatIn.value.trim().slice(0,200);
+  if(!t||!conn||!conn.open) return;
+  send({type:"chat",text:t});
+  chatAdd("me",G.name,t);
+  chatIn.value=""; chatIn.focus();
+}
+document.getElementById("chatBtn").onclick=function(){ chatOpen(!chatState.open); };
+document.getElementById("chatX").onclick=function(){ chatOpen(false); };
+document.getElementById("chatSend").onclick=chatSendMsg;
+chatIn.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); chatSendMsg(); } });
+chatClear();
+
 /* ---------- networking ---------- */
 function teardown(){
+  chatClear();
   stopTimer();
   try{ if(conn) conn.close(); }catch(e){}
   try{ if(peer) peer.destroy(); }catch(e){}
@@ -433,7 +504,7 @@ function joinRoom(code){
 
 function setupConn(c){
   conn=c;
-  c.on("open",function(){ send({type:"hello",name:G.name}); });
+  c.on("open",function(){ send({type:"hello",name:G.name}); chatShow(true); });
   c.on("data",onMsg);
   c.on("close",function(){
     if(G.phase==="home") return;
@@ -472,6 +543,8 @@ function onMsg(m){
       break;
     case "again":
       G.r.againOpp=true; maybeAgain(); break;
+    case "chat":
+      chatAdd("opp",G.oppName,String(m.text||"").slice(0,200)); break;
   }
 }
 
