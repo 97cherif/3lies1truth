@@ -150,6 +150,8 @@ input[type=text]:focus-visible,button:focus-visible{outline:2px solid var(--blue
 .pick:disabled{cursor:default}
 .pick.truth{border-color:var(--teal);color:var(--teal);background:rgba(111,227,210,.1);box-shadow:0 0 14px rgba(111,227,210,.25)}
 .pick.lie{color:#6b8583;text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px}
+.pick.wrong{color:#ff6a82;border-color:var(--red);background:rgba(255,59,92,.12);box-shadow:0 0 14px rgba(255,59,92,.3);text-decoration:none}
+.pick.wrong .badge{color:#fff;background:var(--red);padding:0 6px}
 .pick .badge{float:right;margin-left:10px;font-family:"VT323",monospace;font-size:1.2rem;line-height:1.1;color:var(--red);text-decoration:none;display:inline-block}
 .pick.truth .badge{color:var(--teal)}
 
@@ -248,6 +250,7 @@ function freshRound(){
     oppList:null, oppTruth:-1,
     submitted:false,
     myGuess:null,
+    oppGuess:-1,
     oppGuessed:false, oppCorrect:false,
     gotResult:false, myCorrect:false,
     againMe:false, againOpp:false
@@ -409,13 +412,14 @@ function resultScreen(){
 
   html+='<h2>Jomal dyal '+esc(G.oppName)+'</h2><p class="sub">nta '+(r.myCorrect?'<span class="mark ok">lqiti l7a9i9a</span>':'<span class="mark no">ma lqitihach</span>')+'</p>';
   r.oppList.forEach(function(t,i){
-    var cls=i===r.oppTruth?"truth":"lie", b="";
-    if(i===r.oppTruth) b='<span class="badge">7A9I9A</span>'; else if(i===r.myGuess) b='<span class="badge">khtiyarek</span>';
+    var cls=i===r.oppTruth?"truth":(i===r.myGuess?"wrong":"lie"), b="";
+    if(i===r.oppTruth) b='<span class="badge">7A9I9A</span>'; else if(i===r.myGuess) b='<span class="badge">ljawab li khtarti</span>';
     html+='<button class="pick '+cls+'" disabled>'+b+esc(t)+'</button>';
   });
   html+='<h2 style="margin-top:20px">Jomal dyalk</h2><p class="sub">'+esc(G.oppName)+' '+(r.oppCorrect?'<span class="mark no">lqa l7a9i9a dyalk</span>':'<span class="mark ok">waq3 f kdba</span>')+'</p>';
   r.mine.forEach(function(t,i){
-    var cls=i===r.myTruth?"truth":"lie", b=i===r.myTruth?'<span class="badge">7A9I9A</span>':"";
+    var cls=i===r.myTruth?"truth":(i===r.oppGuess?"wrong":"lie"), b="";
+    if(i===r.myTruth) b='<span class="badge">7A9I9A</span>'; else if(i===r.oppGuess) b='<span class="badge">ljawab li khtar '+esc(G.oppName)+'</span>';
     html+='<button class="pick '+cls+'" disabled>'+b+esc(t)+'</button>';
   });
   html+='<div class="gap"></div><button class="btn" id="again">Layer jdid</button><div class="gap"></div><button class="btn alt" id="leave">Khrej men room</button>';
@@ -532,6 +536,7 @@ function onMsg(m){
       break;
     case "guess":
       // kan9arno jawab sa7bi m3a l7a9i9a dyali, 3ad kan3tiwh reveal
+      G.r.oppGuess=(typeof m.idx==="number")?m.idx:-1;
       G.r.oppCorrect=(m.idx===G.r.myTruth);
       G.r.oppGuessed=true;
       send({type:"result",correct:G.r.oppCorrect,truthIdx:G.r.myTruth});
